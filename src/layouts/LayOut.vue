@@ -1,0 +1,39 @@
+<script setup>
+
+</script>
+
+<template>
+  <a-layout class="layout">
+    <a-layout-header>
+      <div class="logo">
+        <img src="@/images/logo.jpg" alt="灵思OJ" style="width: 50px; height: 50px; border-radius: 15px">
+      </div>
+      <a-menu
+          v-model:selectedKeys="selectedKeys"
+          theme="dark"
+          mode="horizontal"
+          :style="{ lineHeight: '64px', marginLeft: '35px' }"
+      >
+        <a-menu-item key="1">nav 1</a-menu-item>
+        <a-menu-item key="2">nav 2</a-menu-item>
+        <a-menu-item key="3">nav 3</a-menu-item>
+      </a-menu>
+    </a-layout-header>
+    <a-layout-content style="padding: 10px 20px 0">
+      <div :style="{ background: '#fff', padding: '24px', minHeight: '825px' }">
+        <router-view />
+      </div>
+    </a-layout-content>
+    <a-layout-footer style="text-align: center">
+      ©2024 Created by Little Monster
+    </a-layout-footer>
+  </a-layout>
+</template>
+
+<style scoped>
+.logo {
+  position: absolute;
+  top: 0;
+  left: 30px;
+}
+</style>
