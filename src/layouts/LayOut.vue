@@ -1,8 +1,9 @@
 <script setup>
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import { useRouter } from "vue-router";
 import router from "@/router";
 import {useUserStore} from "@/stores/user.js";
+import {checkAccess} from "@/utils/CheckUtil.js";
 
 const rou = useRouter();
 const userStore = useUserStore();
@@ -13,6 +14,19 @@ const menuSelect = (key) => {
   rou.push(key);
 };
 
+// 过滤出路由中的菜单
+const showMenu = computed(() => {
+  return router.options.routes.filter(item => {
+    if (checkAccess(userStore.user, item.meta.role)) {
+      return true;
+    }
+  });
+});
+
+
+// setTimeout(() => {
+//   userStore.setLogin();
+// }, 3000);
 
 </script>
 
@@ -28,7 +42,7 @@ const menuSelect = (key) => {
           mode="horizontal"
           :style="{ lineHeight: '64px', marginLeft: '35px' }"
       >
-        <a-menu-item v-for="item in router.options.routes" :key="item.path" @click="menuSelect(item.path)">{{ item.name }}</a-menu-item>
+        <a-menu-item v-for="item in showMenu" :key="item.path" @click="menuSelect(item.path)">{{ item.name }}</a-menu-item>
       </a-menu>
       <div class="info">
         {{ userStore.isLogin ? userStore.user.userName : "未登录" }}

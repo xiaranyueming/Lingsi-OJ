@@ -1,10 +1,11 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import {RoleEnum} from "@/utils/RoleEnum.js";
 
 export const useUserStore = defineStore('user', () => {
   const user = ref({
     userName: "张三",
-    role: "admin"
+    role: RoleEnum.ADMIN
   })
   const isLogin = ref(false)
 
