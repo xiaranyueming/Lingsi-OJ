@@ -4,8 +4,11 @@ import {RoleEnum} from "@/utils/RoleEnum.js";
 
 export const useUserStore = defineStore('user', () => {
   const user = ref({
-    userName: "张三",
-    role: RoleEnum.ADMIN
+    id: null,
+    userName: "",
+    avatar: "",
+    description: "",
+    role: RoleEnum.NOT_LOGIN
   })
   const isLogin = ref(false)
 
@@ -26,4 +29,6 @@ export const useUserStore = defineStore('user', () => {
     isLogin,
     setLogin
   }
+}, {
+  persist: true
 })

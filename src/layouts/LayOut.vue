@@ -10,23 +10,24 @@ const userStore = useUserStore();
 
 const selectedKeys = ref([rou.currentRoute.value.path]);
 // 点击菜单跳转
-const menuSelect = (key) => {
-  rou.push(key);
+const menuSelect = (path) => {
+  rou.push(path);
 };
 
 // 过滤出路由中的菜单
 const showMenu = computed(() => {
   return router.options.routes.filter(item => {
+    // 需要隐藏的
+    if (item.meta?.hidden) {
+      return false;
+    }
+    // 需要权限的
     if (checkAccess(userStore.user, item.meta.role)) {
       return true;
     }
   });
 });
 
-
-// setTimeout(() => {
-//   userStore.setLogin();
-// }, 3000);
 
 </script>
 
