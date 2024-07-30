@@ -4,6 +4,8 @@ import { useRouter } from "vue-router";
 import router from "@/router";
 import {useUserStore} from "@/stores/user.js";
 import {checkAccess} from "@/utils/CheckUtil.js";
+import {logoutApi} from "@/apis/user.js";
+import {notification} from "ant-design-vue";
 
 const rou = useRouter();
 const userStore = useUserStore();
@@ -29,6 +31,29 @@ const showMenu = computed(() => {
 });
 
 
+// 跳转登录
+const login = () => {
+  rou.push("/login");
+};
+
+// 退出登录
+const logout = async () => {
+  const res = await logoutApi();
+  if (res.code === 200) {
+    notification.success({
+      message: "成功",
+      description: "请重新登录",
+    });
+  } else {
+    notification.error({
+      message: "错误",
+      description: "退出登录失败",
+    });
+  }
+  userStore.clear();
+  await rou.push("/login");
+};
+
 </script>
 
 <template>
@@ -46,7 +71,20 @@ const showMenu = computed(() => {
         <a-menu-item v-for="item in showMenu" :key="item.path" @click="menuSelect(item.path)">{{ item.name }}</a-menu-item>
       </a-menu>
       <div class="info">
-        {{ userStore.isLogin ? userStore.user.userName : "未登录" }}
+        <template v-if="userStore.isLogin">
+          <div class="img">
+            <img :src="userStore.getUser.avatar" alt="头像">
+          </div>
+        </template>
+        <div class="name">
+          {{ userStore.isLogin ? userStore.user.userName : "未登录" }}
+          <template v-if="!userStore.isLogin">
+            <a-button @click="login" style="margin-left: 10px" type="primary" ghost>登录</a-button>
+          </template>
+          <template v-else>
+            <a-button class="btn" @click="logout" style="margin-left: 10px" type="primary" ghost>退出登录</a-button>
+          </template>
+        </div>
       </div>
     </a-layout-header>
     <a-layout-content style="padding: 10px 20px 0">
@@ -67,11 +105,30 @@ const showMenu = computed(() => {
   left: 30px;
 }
 .info {
-  position: absolute;
-  top: 0;
-  right: 100px;
-  color: #fff;
-  font-size: 16px;
-  font-weight: bold;
+  display: flex;
+  align-items: center;
+  position: relative;
+  .img {
+    position: absolute;
+    top: -65px;
+    right: 150px;
+    width: 50px;
+    img {
+      width: 100%;
+      border-radius: 50%;
+    }
+  }
+  .name {
+    position: absolute;
+    top: -65px;
+    right: 85px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .btn {
+    position: absolute;
+    top: 17px;
+  }
 }
 </style>

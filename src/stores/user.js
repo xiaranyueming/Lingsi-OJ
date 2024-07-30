@@ -22,12 +22,24 @@ export const useUserStore = defineStore('user', () => {
     isLogin.value = true
   }
 
+  const clear = () => {
+    user.value = {
+      id: null,
+      userName: "",
+      avatar: "",
+      description: "",
+      role: RoleEnum.NOT_LOGIN
+    }
+    isLogin.value = false
+  }
+
   return {
     user,
     setUser,
     getUser,
     isLogin,
-    setLogin
+    setLogin,
+    clear
   }
 }, {
   persist: true

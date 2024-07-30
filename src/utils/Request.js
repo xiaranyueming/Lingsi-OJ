@@ -5,6 +5,7 @@ import { notification } from "ant-design-vue";
 const Request = axios.create({
     baseURL: "http://localhost:8080",
     timeout: 30000,
+    withCredentials: true
 })
 
 Request.interceptors.request.use( config => {

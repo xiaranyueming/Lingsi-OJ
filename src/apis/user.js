@@ -18,3 +18,31 @@ export const registerApi = (data) => {
         data: data
     })
 }
+
+
+// 获取用户信息
+export const getUserInfoApi = (id) => {
+    return Request({
+        url: `/user/info/${id}`,
+        method: 'get',
+    })
+}
+
+
+// 修改密码
+export const changePasswordApi = (data) => {
+    return Request({
+        url: '/user/change',
+        method: 'put',
+        data: data
+    })
+}
+
+
+// 退出登录
+export const logoutApi = () => {
+    return Request({
+        url: '/logout',
+        method: 'get',
+    })
+}
