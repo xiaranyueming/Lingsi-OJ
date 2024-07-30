@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Topic from "@/views/topic/Topic.vue";
+import Topic from "@/views/question/Question.vue";
 import My from "@/views/my/My.vue";
 import Admin from "@/views/admin/Admin.vue";
 import NoAuth from "@/components/NoAuth.vue";
