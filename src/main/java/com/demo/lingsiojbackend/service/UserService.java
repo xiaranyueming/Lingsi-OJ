@@ -46,4 +46,12 @@ public interface UserService extends IService<User> {
      * @return boolean 是否修改成功
      */
     boolean updatePassword(UpdatePassword updatePassword, HttpServletRequest request);
+
+
+    /**
+     * 修改用户信息
+     * @param userVO   用户信息
+     * @return boolean 是否修改成功
+     */
+    boolean updateUserInfo(UserVO userVO);
 }

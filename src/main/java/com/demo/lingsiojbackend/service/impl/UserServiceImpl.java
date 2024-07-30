@@ -12,10 +12,19 @@ import com.demo.lingsiojbackend.exception.CustomException;
 import com.demo.lingsiojbackend.service.UserService;
 import com.demo.lingsiojbackend.mapper.UserMapper;
 import com.demo.lingsiojbackend.utils.EncryptionUtil;
+import com.demo.lingsiojbackend.utils.Result;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ResourceUtils;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
 * @author sh
@@ -127,6 +136,30 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         request.getSession().removeAttribute("userId");
         return this.updateById(user);
     }
+
+
+    /**
+     * 修改用户信息
+     * @param userVO   用户信息
+     * @return boolean 是否修改成功
+     */
+    @Override
+    public boolean updateUserInfo(UserVO userVO) {
+        if (userVO == null || userVO.getId() == null) {
+            throw new CustomException(ErrorCodeEnum.PARAM_ERROR.getCode(), ErrorCodeEnum.PARAM_ERROR.getMessage());
+        }
+        // 判断用户是否存在
+        User user = this.getById(userVO.getId());
+        if (user == null) {
+            throw new CustomException(ErrorCodeEnum.USER_NOT_EXIST.getCode(), ErrorCodeEnum.USER_NOT_EXIST.getMessage());
+        }
+
+        return this.updateById(BeanUtil.copyProperties(userVO, User.class));
+    }
+
+
+
+
 }
 
 
