@@ -7,8 +7,10 @@ import com.demo.lingsiojbackend.service.UserService;
 import com.demo.lingsiojbackend.utils.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,13 +46,26 @@ public class LoginAndRegisterController {
      */
     @PostMapping("/login")
     @Operation(summary = "用户登录")
-    public Result login(@RequestBody UserDTO userDTO, HttpSession session) {
+    public Result login(@RequestBody UserDTO userDTO, HttpServletRequest request) {
         if (userDTO == null) {
             return Result.fail(ErrorCodeEnum.PARAM_ERROR);
         }
 
-        UserVO userVO = userService.login(userDTO, session);
+        UserVO userVO = userService.login(userDTO, request);
 
         return Result.success(userVO);
+    }
+
+
+    /**
+     * 用户登出
+     * @param request 请求
+     * @return Result
+     */
+    @GetMapping("/logout")
+    @Operation(summary = "用户登出")
+    public Result logout(HttpServletRequest request) {
+        request.getSession().invalidate();
+        return Result.success();
     }
 }

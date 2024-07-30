@@ -1,7 +1,6 @@
 spring:
   session:
-    redis:
-      repository-type: default
+    store-type: redis
     timeout: 30m
   application:
     name: Lingsi-OJ

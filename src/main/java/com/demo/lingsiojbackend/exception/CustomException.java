@@ -1,6 +1,5 @@
 package com.demo.lingsiojbackend.exception;
 
-import com.demo.lingsiojbackend.constant.ErrorCodeEnum;
 import lombok.Getter;
 
 @Getter
@@ -11,15 +10,6 @@ public class CustomException extends RuntimeException {
     public CustomException(Integer code, String message) {
         super(message);
         this.code = code;
+        this.message = message;
     }
-
-    public CustomException(String message) {
-        super(message);
-    }
-
-    public CustomException(ErrorCodeEnum errorCodeEnum) {
-        super(errorCodeEnum.getMessage());
-        this.code = errorCodeEnum.getCode();
-    }
-
 }
