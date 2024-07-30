@@ -1,9 +1,9 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import {useUserStore} from "@/stores/user.js";
-import { DownOutlined } from "@ant-design/icons-vue";
+import { DownOutlined, LoadingOutlined, PlusOutlined } from "@ant-design/icons-vue";
 import { notification } from "ant-design-vue";
-import {changePasswordApi, getUserInfoApi, logoutApi} from "@/apis/user.js";
+import {changePasswordApi, logoutApi, updateUserInfoApi} from "@/apis/user.js";
 import { useRouter } from "vue-router";
 
 const userStore = useUserStore();
@@ -46,7 +46,6 @@ const onFinish = async () => {
     return
   }
   const res = await changePasswordApi(passwordForm.value);
-  // const res = await getUserInfoApi(userStore.getUser.id)
   if (res.code === 200) {
     notification.success({
       message: "成功",
@@ -63,6 +62,67 @@ const onFinish = async () => {
   }
 }
 
+
+// 修改用户信息
+const edit_open = ref(false);
+const editInfoForm = ref({});
+const editUserInfo = () => {
+  edit_open.value = true;
+  editInfoForm.value = {
+    ...userInfo.value,
+  };
+};
+const editFinish = async () => {
+  const res = await updateUserInfoApi(editInfoForm.value);
+  if (res.code === 200) {
+    notification.success({
+      message: "成功",
+      description: "修改用户信息成功",
+    });
+    edit_open.value = false
+    userStore.setUser(editInfoForm.value)
+    await getUserInfo();
+    editInfoForm.value = {}
+  } else {
+    notification.error({
+      message: "错误",
+      description: res.message,
+    });
+  }
+};
+
+
+// 上传头像
+function getBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+}
+const fileList = ref([]);
+const previewVisible = ref(false);
+const previewImage = ref('');
+const previewTitle = ref('');
+const handleCancel = () => {
+  previewVisible.value = false;
+  previewTitle.value = '';
+};
+const handlePreview = async (file) => {
+  if (!file.url && !file.preview) {
+    file.preview = await getBase64(file.originFileObj);
+  }
+  previewImage.value = file.url || file.preview;
+  previewVisible.value = true;
+  previewTitle.value = file.name || file.url.substring(file.url.lastIndexOf('/') + 1);
+  editInfoForm.avatar = file.url || file.preview;
+};
+const handleChange = info => {
+  if (info.file.status === 'done') {
+    editInfoForm.value.avatar = info.file.response.data
+  }
+};
 
 // 退出登录
 const logout = async () => {
@@ -120,7 +180,7 @@ onMounted(() => {
 <!--  修改密码遮罩层-->
   <a-drawer width="500px"
       v-model:open="password_open"
-      class="custom-class"
+      class="password_drawer"
       root-class-name="root-class-name"
       :root-style="{ color: 'blue' }"
       title="修改密码"
@@ -154,6 +214,72 @@ onMounted(() => {
           :rules="[{ required: true, message: '请再次输入新密码' }]"
       >
         <a-input-password v-model:value="passwordForm.confirmPassword" allow-clear />
+      </a-form-item>
+      <a-form-item :wrapper-col="{ offset: 11, span: 20 }">
+        <a-space size="middle">
+          <a-button type="primary" html-type="submit">保存</a-button>
+          <a-button type="primary" @click="reset">重置</a-button>
+        </a-space>
+      </a-form-item>
+    </a-form>
+  </a-drawer>
+
+<!--  修改用户信息遮罩层-->
+  <a-drawer width="500px"
+            v-model:open="edit_open"
+            class="info_drawer"
+            root-class-name="root-class-name"
+            :root-style="{ color: 'blue' }"
+            title="编辑信息"
+            placement="right"
+  >
+    <a-form
+        :model="editInfoForm"
+        :label-col="{ span: 6 }"
+        :wrapper-col="{ span: 16 }"
+        autocomplete="off"
+        @finish="editFinish"
+    >
+      <a-form-item
+          label="用户id"
+          name="id"
+      >
+        <a-input v-model:value="editInfoForm.id" :disabled="true" />
+      </a-form-item>
+      <a-form-item
+          label="用户名"
+          name="userName"
+          :rules="[{ required: true, message: '请输入用户名' }]"
+      >
+        <a-input v-model:value="editInfoForm.userName" allow-clear />
+      </a-form-item>
+      <a-form-item
+          label="用户头像"
+          name="avatar"
+      >
+        <img style="width: 60px" :src="editInfoForm.avatar" alt="头像">
+        <div class="clearfix">
+          <a-upload :with-credentials="true"
+              v-model:file-list="fileList"
+              action="http://localhost:8080/user/upload"
+              list-type="picture-card"
+              @preview="handlePreview" @change="handleChange"
+          >
+            <div v-if="fileList.length < 1">
+              <plus-outlined />
+              <div style="margin-top: 8px">Upload</div>
+            </div>
+          </a-upload>
+          <a-modal :open="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
+            <img alt="example" style="width: 100%" :src="previewImage" />
+          </a-modal>
+        </div>
+      </a-form-item>
+      <a-form-item
+          label="个人简介"
+          name="description"
+      >
+        <a-textarea v-model:value="editInfoForm.description" allow-clear />
       </a-form-item>
       <a-form-item :wrapper-col="{ offset: 11, span: 20 }">
         <a-space size="middle">

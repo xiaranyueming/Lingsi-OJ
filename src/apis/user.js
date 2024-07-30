@@ -46,3 +46,13 @@ export const logoutApi = () => {
         method: 'get',
     })
 }
+
+
+// 修改用户信息
+export const updateUserInfoApi = (data) => {
+    return Request({
+        url: '/user/update',
+        method: 'put',
+        data: data
+    })
+}
