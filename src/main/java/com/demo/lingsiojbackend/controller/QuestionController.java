@@ -2,9 +2,10 @@ package com.demo.lingsiojbackend.controller;
 
 import com.demo.lingsiojbackend.annotation.Auth;
 import com.demo.lingsiojbackend.constant.ErrorCodeEnum;
-import com.demo.lingsiojbackend.entity.dto.PageDTO;
+import com.demo.lingsiojbackend.entity.queation.QuestionPage;
 import com.demo.lingsiojbackend.entity.queation.AddQuestionParam;
 import com.demo.lingsiojbackend.entity.queation.QuestionDetail;
+import com.demo.lingsiojbackend.entity.queation.UpdateQuestionParam;
 import com.demo.lingsiojbackend.entity.vo.QuestionVO;
 import com.demo.lingsiojbackend.service.QuestionService;
 import com.demo.lingsiojbackend.utils.Result;
@@ -27,16 +28,16 @@ public class QuestionController {
 
     /**
      * 分页获取题目列表
-     * @param pageDTO 分页参数
+     * @param questionPage 分页参数
      * @return 题目列表
      */
     @PostMapping("/page/list")
     @Operation(summary = "分页获取题目列表")
-    public Result getQuestionList(@RequestBody PageDTO pageDTO) {
-        if (pageDTO.getPageSize() == null || pageDTO.getPageNum() == null) {
+    public Result getQuestionList(@RequestBody QuestionPage questionPage) {
+        if (questionPage.getPageSize() == null || questionPage.getPageNum() == null) {
             return Result.fail(ErrorCodeEnum.PARAM_ERROR);
         }
-        List<QuestionVO> list = questionService.getQuestionList(pageDTO);
+        List<QuestionVO> list = questionService.getQuestionList(questionPage);
         return Result.success(list);
     }
 
@@ -71,6 +72,42 @@ public class QuestionController {
             return Result.fail(ErrorCodeEnum.PARAM_ERROR);
         }
         questionService.addQuestion(addQuestionParam);
+        return Result.success();
+    }
+
+
+    /**
+     * 更新题目
+     * @param updateQuestionParam 更新题目参数
+     * @return 更新结果
+     */
+    @PutMapping("/update")
+    @Operation(summary = "更新题目")
+    @Auth
+    public Result updateQuestion(@RequestBody UpdateQuestionParam updateQuestionParam) {
+        if (updateQuestionParam == null || updateQuestionParam.getId() == null
+                || StringUtils.isBlank(updateQuestionParam.getTitle())
+                || StringUtils.isBlank(updateQuestionParam.getContent())) {
+            return Result.fail(ErrorCodeEnum.PARAM_ERROR);
+        }
+        questionService.updateQuestion(updateQuestionParam);
+        return Result.success();
+    }
+
+
+    /**
+     * 删除题目
+     * @param id 题目id
+     * @return 删除结果
+     */
+    @DeleteMapping("/delete/{id}")
+    @Operation(summary = "删除题目")
+    @Auth
+    public Result deleteQuestion(@PathVariable("id") Integer id) {
+        if (id == null) {
+            return Result.fail(ErrorCodeEnum.PARAM_ERROR);
+        }
+        questionService.deleteQuestion(id);
         return Result.success();
     }
 }

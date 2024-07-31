@@ -6,6 +6,7 @@ import com.demo.lingsiojbackend.entity.domain.Question;
 import com.demo.lingsiojbackend.entity.queation.AddQuestionParam;
 import com.demo.lingsiojbackend.entity.queation.JudgeConfig;
 import com.demo.lingsiojbackend.entity.queation.QuestionDetail;
+import com.demo.lingsiojbackend.entity.queation.UpdateQuestionParam;
 import com.demo.lingsiojbackend.entity.vo.QuestionVO;
 
 import java.util.List;
@@ -78,6 +79,32 @@ public class QuestionUtil {
         String judgeConfig = JSONUtil.toJsonStr(addQuestionParam.getJudgeConfig());
         question.setJudgeConfig(judgeConfig);
         question.setUserId(addQuestionParam.getUserId());
+
+        return question;
+    }
+
+
+    /**
+     * 将 UpdateQuestionParam 转换为 Question
+     * @param updateQuestionParam UpdateQuestionParam
+     * @return Question
+     */
+    public static Question updateQuestionParam2Question(UpdateQuestionParam updateQuestionParam) {
+        Question question = new Question();
+        question.setId(updateQuestionParam.getId());
+        question.setTitle(updateQuestionParam.getTitle());
+        question.setContent(updateQuestionParam.getContent());
+        // 将 tags List 转换为字符串
+        String tags = JSONUtil.toJsonStr(updateQuestionParam.getTags());
+        question.setTags(tags);
+        question.setAnswer(updateQuestionParam.getAnswer());
+        // 将judgeCase List 转换为字符串
+        String judgeCase = JSONUtil.toJsonStr(updateQuestionParam.getJudgeCase());
+        question.setJudgeCase(judgeCase);
+        // 将 judgeConfig 对象转换为字符串
+        String judgeConfig = JSONUtil.toJsonStr(updateQuestionParam.getJudgeConfig());
+        question.setJudgeConfig(judgeConfig);
+        question.setUserId(updateQuestionParam.getUserId());
 
         return question;
     }

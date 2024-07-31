@@ -2,18 +2,17 @@ package com.demo.lingsiojbackend.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.demo.lingsiojbackend.annotation.Auth;
 import com.demo.lingsiojbackend.constant.ErrorCodeEnum;
 import com.demo.lingsiojbackend.entity.domain.Question;
-import com.demo.lingsiojbackend.entity.dto.PageDTO;
+import com.demo.lingsiojbackend.entity.queation.QuestionPage;
 import com.demo.lingsiojbackend.entity.queation.AddQuestionParam;
 import com.demo.lingsiojbackend.entity.queation.QuestionDetail;
+import com.demo.lingsiojbackend.entity.queation.UpdateQuestionParam;
 import com.demo.lingsiojbackend.entity.vo.QuestionVO;
 import com.demo.lingsiojbackend.exception.CustomException;
 import com.demo.lingsiojbackend.service.QuestionService;
 import com.demo.lingsiojbackend.mapper.QuestionMapper;
 import com.demo.lingsiojbackend.utils.QuestionUtil;
-import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,41 +31,27 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
 
     /**
      * 分页获取题目列表
-     * @param pageDTO 分页参数
+     * @param questionPage 分页参数
      * @return 题目列表
      */
     @Override
-    public List<QuestionVO> getQuestionList(PageDTO pageDTO) {
-        if (pageDTO.getPageSize() == null || pageDTO.getPageNum() == null) {
+    public List<QuestionVO> getQuestionList(QuestionPage questionPage) {
+        if (questionPage.getPageSize() == null || questionPage.getPageNum() == null) {
             throw new CustomException(ErrorCodeEnum.PARAM_ERROR.getCode(), ErrorCodeEnum.PARAM_ERROR.getMessage());
         }
 
-        Page<Question> page = new Page<>(pageDTO.getPageNum(), pageDTO.getPageSize());
-        List<QuestionVO> questionList = null;
-        if (pageDTO.getQuestionIndex() != null) {
-            List<Question> records = this.lambdaQuery()
-                    .eq(Question::getId, pageDTO.getQuestionIndex())
-                    .page(page)
-                    .getRecords();
-            questionList = QuestionUtil.questionList2QueationVOList(records);
-            return questionList;
-        } else if (StringUtils.isBlank(pageDTO.getKeyword())) {
-            List<Question> records = this.lambdaQuery()
-                    .page(page)
-                    .getRecords();
-            questionList = QuestionUtil.questionList2QueationVOList(records);
-        } else {
-            List<Question> records = this.lambdaQuery()
-                    .like(Question::getTitle, pageDTO.getKeyword())
-                    .or()
-                    .like(Question::getContent, pageDTO.getKeyword())
-                    .or()
-                    .like(Question::getTags, pageDTO.getKeyword())
-                    .page(page)
-                    .getRecords();
-            questionList = QuestionUtil.questionList2QueationVOList(records);
-        }
-        return questionList;
+        Page<Question> page = new Page<>(questionPage.getPageNum(), questionPage.getPageSize());
+        List<Question> questionList = this.lambdaQuery()
+                .eq(questionPage.getQuestionIndex() != null, Question::getId, questionPage.getQuestionIndex())
+                .like(StringUtils.isNotBlank(questionPage.getKeyword()), Question::getTitle, questionPage.getKeyword())
+                .or()
+                .like(StringUtils.isNotBlank(questionPage.getKeyword()), Question::getContent, questionPage.getKeyword())
+                .or()
+                .like(StringUtils.isNotBlank(questionPage.getKeyword()), Question::getTags, questionPage.getKeyword())
+                .page(page)
+                .getRecords();
+
+        return QuestionUtil.questionList2QueationVOList(questionList);
     }
 
 
@@ -106,7 +91,57 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
         try {
             this.save(question);
         } catch (Exception e) {
-            System.out.println(e);
+            throw new CustomException(ErrorCodeEnum.SYSTEM_ERROR.getCode(), ErrorCodeEnum.SYSTEM_ERROR.getMessage());
+        }
+    }
+
+
+    /**
+     * 更新题目
+     * @param updateQuestionParam 更新题目参数
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateQuestion(UpdateQuestionParam updateQuestionParam) {
+        if (updateQuestionParam == null || updateQuestionParam.getId() == null
+                || StringUtils.isBlank(updateQuestionParam.getTitle())
+                || StringUtils.isBlank(updateQuestionParam.getContent())) {
+            throw new CustomException(ErrorCodeEnum.PARAM_ERROR.getCode(), ErrorCodeEnum.PARAM_ERROR.getMessage());
+        }
+        Question question = this.lambdaQuery()
+                .eq(Question::getId, updateQuestionParam.getId())
+                .one();
+        if (question == null) {
+            throw new CustomException(ErrorCodeEnum.INFO_NOT_EXIST.getCode(), ErrorCodeEnum.INFO_NOT_EXIST.getMessage());
+        }
+        Question updatedQuestion = QuestionUtil.updateQuestionParam2Question(updateQuestionParam);
+        try {
+            this.updateById(updatedQuestion);
+        } catch (Exception e) {
+            throw new CustomException(ErrorCodeEnum.SYSTEM_ERROR.getCode(), ErrorCodeEnum.SYSTEM_ERROR.getMessage());
+        }
+    }
+
+
+
+    /**
+     * 删除题目
+     * @param id 题目id
+     */
+    @Override
+    public void deleteQuestion(Integer id) {
+        if (id == null) {
+            throw new CustomException(ErrorCodeEnum.PARAM_ERROR.getCode(), ErrorCodeEnum.PARAM_ERROR.getMessage());
+        }
+        Question question = this.lambdaQuery()
+                .eq(Question::getId, id)
+                .one();
+        if (question == null) {
+            throw new CustomException(ErrorCodeEnum.INFO_NOT_EXIST.getCode(), ErrorCodeEnum.INFO_NOT_EXIST.getMessage());
+        }
+        try {
+            this.removeById(id);
+        } catch (Exception e) {
             throw new CustomException(ErrorCodeEnum.SYSTEM_ERROR.getCode(), ErrorCodeEnum.SYSTEM_ERROR.getMessage());
         }
     }

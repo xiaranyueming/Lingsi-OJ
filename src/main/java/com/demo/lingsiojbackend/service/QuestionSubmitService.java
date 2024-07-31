@@ -2,6 +2,12 @@ package com.demo.lingsiojbackend.service;
 
 import com.demo.lingsiojbackend.entity.domain.QuestionSubmit;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.demo.lingsiojbackend.entity.queation.QuestionPage;
+import com.demo.lingsiojbackend.entity.questionsubmit.AddQuestionSubmitParam;
+import com.demo.lingsiojbackend.entity.questionsubmit.QuestionSubmitPage;
+import com.demo.lingsiojbackend.entity.vo.QuestionSubmitVO;
+
+import java.util.List;
 
 /**
 * @author sh
@@ -10,4 +16,19 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface QuestionSubmitService extends IService<QuestionSubmit> {
 
+
+    /**
+     * 分页获取题目提交列表
+     * @param questionSubmitPage  分页参数
+     * @return 题目提交列表
+     */
+    List<QuestionSubmitVO> getQuestionSubmitListByPage(QuestionSubmitPage questionSubmitPage);
+
+
+
+    /**
+     * 提交题目
+     * @param addQuestionSubmitParam 提交题目参数
+     */
+    void addQuestionSubmit(AddQuestionSubmitParam addQuestionSubmitParam);
 }

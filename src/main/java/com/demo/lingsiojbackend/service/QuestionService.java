@@ -2,11 +2,11 @@ package com.demo.lingsiojbackend.service;
 
 import com.demo.lingsiojbackend.entity.domain.Question;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.demo.lingsiojbackend.entity.dto.PageDTO;
+import com.demo.lingsiojbackend.entity.queation.QuestionPage;
 import com.demo.lingsiojbackend.entity.queation.AddQuestionParam;
 import com.demo.lingsiojbackend.entity.queation.QuestionDetail;
+import com.demo.lingsiojbackend.entity.queation.UpdateQuestionParam;
 import com.demo.lingsiojbackend.entity.vo.QuestionVO;
-import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 
@@ -19,10 +19,10 @@ public interface QuestionService extends IService<Question> {
 
     /**
      * 分页获取题目列表
-     * @param pageDTO 分页参数
+     * @param questionPage 分页参数
      * @return 题目列表
      */
-    List<QuestionVO> getQuestionList(PageDTO pageDTO);
+    List<QuestionVO> getQuestionList(QuestionPage questionPage);
 
 
     /**
@@ -39,4 +39,18 @@ public interface QuestionService extends IService<Question> {
      * @param addQuestionParam 添加题目参数
      */
     void addQuestion(AddQuestionParam addQuestionParam);
+
+
+    /**
+     * 更新题目
+     * @param updateQuestionParam 更新题目参数
+     */
+    void updateQuestion(UpdateQuestionParam updateQuestionParam);
+
+
+    /**
+     * 删除题目
+     * @param id 题目id
+     */
+    void deleteQuestion(Integer id);
 }
