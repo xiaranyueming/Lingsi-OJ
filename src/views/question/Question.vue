@@ -90,7 +90,7 @@ onMounted(() => {
 <template>
   <div class="search">
     <a-input-number class="inputNumber" v-model:value="page.questionIndex" placeholder="请输入题目序号" :min="1" />
-    <a-input class="keywordInput" v-model:value="page.keyword" placeholder="请输入搜索词" />
+    <a-input class="keywordInput" v-model:value="page.keyword" placeholder="请输入搜索词" allow-clear />
     <a-button ghost class="search-btn" type="primary" @click="search">搜索</a-button>
     <a-button ghost class="reset-btn" type="primary" @click="reset">重置</a-button>
     <a-button ghost class="pub-btn" type="primary" @click="publishQuestion" :disabled="userStore.getUser.role !== RoleEnum.ADMIN">发布题目</a-button>

@@ -257,7 +257,7 @@ onMounted(() => {
           label="用户头像"
           name="avatar"
       >
-        <img style="width: 60px" :src="editInfoForm.avatar" alt="头像">
+        <img style="width: 60px; margin-bottom: 15px" :src="editInfoForm.avatar" alt="头像">
         <div class="clearfix">
           <a-upload :with-credentials="true"
               v-model:file-list="fileList"
