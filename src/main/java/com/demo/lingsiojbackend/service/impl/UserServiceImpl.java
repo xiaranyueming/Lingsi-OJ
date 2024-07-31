@@ -85,7 +85,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
         UserVO userVO = BeanUtil.copyProperties(user, UserVO.class);
         HttpSession session = request.getSession();
-        session.setAttribute("userId", user.getId());
+        session.setAttribute("userVO", userVO);
         return userVO;
     }
 

@@ -1,5 +1,6 @@
 package com.demo.lingsiojbackend.interceptor;
 
+import com.demo.lingsiojbackend.entity.vo.UserVO;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -14,8 +15,8 @@ public class AuthInterceptor implements HandlerInterceptor {
             return true;
         }
         HttpSession session = request.getSession();
-        Integer userId = (Integer) session.getAttribute("userId");
-        if (userId == null) {
+        UserVO user = (UserVO) session.getAttribute("userVO");
+        if (user == null) {
             response.setStatus(401);
             response.setContentType("application/json;charset=utf-8");
             response.getWriter().write("{\"code\":401,\"message\":\"未登录\"}");

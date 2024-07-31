@@ -12,7 +12,9 @@ public enum ErrorCodeEnum {
     ACCOUNT_PASSWORD_ERROR(407, "账号或密码错误"),
     USER_HAS_EXIST(408, "用户已存在"),
     UPDATE_PASSWORD_ERROR(409, "修改密码失败"),
-    FILE_FORMAT_ERROR(410, "文件格式错误");
+    FILE_FORMAT_ERROR(410, "文件格式错误"),
+    INFO_NOT_EXIST(411, "此信息不存在"),
+    NO_AUTH(412, "无权限");
 
     private final int code;
     private final String message;

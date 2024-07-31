@@ -3,8 +3,10 @@ package com.demo.lingsiojbackend.entity.vo;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class UserVO {
+public class UserVO implements Serializable {
     /**
      * 用户id
      */
