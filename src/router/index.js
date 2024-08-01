@@ -7,6 +7,7 @@ import Login from "@/views/login/Login.vue";
 import Register from "@/views/login/Register.vue";
 import Square from "@/views/square/Square.vue";
 import AnswerQuestion from "@/views/question/AnswerQuestion.vue";
+import PublishQuestion from "@/views/publishquestion/PublishQuestion.vue";
 import {RoleEnum} from "@/utils/RoleEnum.js";
 import {useUserStore} from "@/stores/user.js";
 
@@ -62,6 +63,14 @@ const router = createRouter({
       }
     },
     {
+      path: '/publishQuestion',
+      name: '发布题目',
+        component: PublishQuestion,
+        meta: {
+            role: RoleEnum.ADMIN
+        }
+    },
+    {
       path: '/admin',
       name: '管理',
       component: Admin,
@@ -93,7 +102,7 @@ router.beforeEach((to, from, next) => {
         }
     }
     if (to.meta.role === RoleEnum.USER) {
-        if (userStore.getUser.role === RoleEnum.USER) {
+        if (userStore.getUser.role === RoleEnum.USER || userStore.getUser.role === RoleEnum.ADMIN) {
             next()
         } else {
             next('/NoAuth')

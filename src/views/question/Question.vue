@@ -1,12 +1,9 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import { getQuestionListApi } from "@/apis/question.js";
-import {useUserStore} from "@/stores/user.js";
 import {useRouter} from "vue-router";
-import {RoleEnum} from "@/utils/RoleEnum.js";
 
 const router = useRouter()
-const userStore = useUserStore()
 
 const columns = [
   {
@@ -124,11 +121,6 @@ onMounted(() => {
   }
   .search-btn {
     margin-right: 30px;
-  }
-  .pub-btn {
-    position: absolute;
-    top: 97px;
-    right: 200px;
   }
 }
 </style>

@@ -9,3 +9,13 @@ export const getQuestionListApi = (data) => {
         data: data
     })
 }
+
+
+// 发布题目
+export const addQuestionApi = (data) => {
+    return Request({
+        url: '/question/add',
+        method: 'post',
+        data: data
+    })
+}
