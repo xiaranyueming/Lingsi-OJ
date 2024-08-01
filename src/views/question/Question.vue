@@ -2,8 +2,10 @@
 import {onMounted, ref} from "vue";
 import { getQuestionListApi } from "@/apis/question.js";
 import {useUserStore} from "@/stores/user.js";
+import {useRouter} from "vue-router";
 import {RoleEnum} from "@/utils/RoleEnum.js";
 
+const router = useRouter()
 const userStore = useUserStore()
 
 const columns = [
@@ -77,9 +79,8 @@ const search = async () => {
   await getQuestionList()
 }
 
-// 发布题目
-const publishQuestion = () => {
-  
+const toAnswerQuestion = () => {
+  router.push('/answerQuestion')
 }
 
 onMounted(() => {
@@ -93,7 +94,6 @@ onMounted(() => {
     <a-input class="keywordInput" v-model:value="page.keyword" placeholder="请输入搜索词" allow-clear />
     <a-button ghost class="search-btn" type="primary" @click="search">搜索</a-button>
     <a-button ghost class="reset-btn" type="primary" @click="reset">重置</a-button>
-    <a-button ghost class="pub-btn" type="primary" @click="publishQuestion" :disabled="userStore.getUser.role !== RoleEnum.ADMIN">发布题目</a-button>
   </div>
   <a-table :columns="columns" :data-source="data">
     <template #bodyCell="{ column, record }">
@@ -103,7 +103,7 @@ onMounted(() => {
         </a-tag>
       </template>
       <template v-else-if="column.key === 'action'">
-        <a-button ghost type="primary">答题</a-button>
+        <a-button ghost type="primary" @click="toAnswerQuestion">答题</a-button>
       </template>
     </template>
   </a-table>

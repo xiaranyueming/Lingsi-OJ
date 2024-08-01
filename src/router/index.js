@@ -6,6 +6,7 @@ import NoAuth from "@/components/NoAuth.vue";
 import Login from "@/views/login/Login.vue";
 import Register from "@/views/login/Register.vue";
 import Square from "@/views/square/Square.vue";
+import AnswerQuestion from "@/views/question/AnswerQuestion.vue";
 import {RoleEnum} from "@/utils/RoleEnum.js";
 import {useUserStore} from "@/stores/user.js";
 
@@ -35,6 +36,14 @@ const router = createRouter({
           hidden: true,
           role: RoleEnum.NOT_LOGIN
         }
+    },
+    {
+      path: '/answerQuestion',
+      component: AnswerQuestion,
+      meta: {
+        hidden: true,
+        role: RoleEnum.NOT_LOGIN
+      }
     },
     {
       path: '/square',
