@@ -8,7 +8,11 @@ import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons-vue";
 
 const userStore = useUserStore()
 
-const form = ref({
+const props = defineProps({
+  form: Object
+})
+
+const form = props.form == null ? ref({
   title: '',
   content: '',
   tags: [],
@@ -20,7 +24,7 @@ const form = ref({
     stackLimit: 1024,
   },
   userId: userStore.getUser.id
-})
+}) : props.form
 const contentHandleChange = (v) => {
   form.value.content = v
 }

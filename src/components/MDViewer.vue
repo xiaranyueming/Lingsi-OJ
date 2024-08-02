@@ -1,7 +1,7 @@
 <script setup>
 import gfm from '@bytemd/plugin-gfm'
 import highlight from "@bytemd/plugin-highlight";
-import {Editor} from '@bytemd/vue-next'
+import {Viewer} from '@bytemd/vue-next'
 
 const plugins = [
   gfm(),
@@ -10,13 +10,12 @@ const plugins = [
 
 const props = defineProps({
   value: String,
-  handleChange: Function
 })
 </script>
 
 <template>
   <div class="md">
-    <Editor class="edit" :value="props.value" :plugins="plugins" @change="props.handleChange" />
+    <Viewer class="edit" :value="props.value" :plugins="plugins" />
   </div>
 </template>
 

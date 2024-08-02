@@ -40,7 +40,7 @@ const columns = [
   {
     title: '题目序号',
     customRender: ({ record }) => {
-      return record.questionVO.id
+      return record.questionVO?.id
     },
     key: 'id',
     width: 100,
@@ -49,7 +49,7 @@ const columns = [
   {
     title: '题目',
     customRender: ({ record }) => {
-      return record.questionVO.title
+      return record.questionVO?.title
     },
     key: 'title',
     width: 600,
@@ -71,7 +71,7 @@ const columns = [
   {
     title: '通过数',
     customRender: ({ record }) => {
-      return record.questionVO.acceptNum
+      return record.questionVO?.acceptNum
     },
     key: 'acceptNum',
     width: 100,
@@ -80,7 +80,7 @@ const columns = [
   {
     title: '提交数',
     customRender: ({ record }) => {
-      return record.questionVO.submitNum
+      return record.questionVO?.submitNum
     },
     key: 'submitNum',
     width: 100,
@@ -133,7 +133,7 @@ onMounted(() => {
     <a-table :columns="columns" :data-source="data">
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'tags'">
-          <a-tag color="orange" v-for="item in record.questionVO.tags">
+          <a-tag color="orange" v-for="item in record.questionVO?.tags">
             {{ item }}
           </a-tag>
         </template>

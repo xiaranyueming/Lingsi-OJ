@@ -1,13 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Topic from "@/views/question/Question.vue";
 import My from "@/views/my/My.vue";
-import Admin from "@/views/admin/Admin.vue";
+import QuestionAdmin from "@/views/admin/QuestionAdmin.vue";
 import NoAuth from "@/components/NoAuth.vue";
 import Login from "@/views/login/Login.vue";
 import Register from "@/views/login/Register.vue";
 import Square from "@/views/square/Square.vue";
 import AnswerQuestion from "@/views/question/AnswerQuestion.vue";
-import PublishQuestion from "@/views/publishquestion/PublishQuestion.vue";
+import PublishQuestion from "@/views/question/PublishQuestion.vue";
 import {RoleEnum} from "@/utils/RoleEnum.js";
 import {useUserStore} from "@/stores/user.js";
 
@@ -71,9 +71,9 @@ const router = createRouter({
         }
     },
     {
-      path: '/admin',
-      name: '管理',
-      component: Admin,
+      path: '/questionAdmin',
+      name: '题目管理',
+      component: QuestionAdmin,
       meta: {
         role: RoleEnum.ADMIN
       }

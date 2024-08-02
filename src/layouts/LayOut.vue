@@ -1,6 +1,6 @@
 <script setup>
-import {computed, ref} from "vue";
-import { useRouter } from "vue-router";
+import {computed, ref, watch} from "vue";
+import { useRouter, useRoute } from "vue-router";
 import router from "@/router";
 import {useUserStore} from "@/stores/user.js";
 import {checkAccess} from "@/utils/CheckUtil.js";
@@ -8,9 +8,14 @@ import {logoutApi} from "@/apis/user.js";
 import {notification} from "ant-design-vue";
 
 const rou = useRouter();
+const route = useRoute();
 const userStore = useUserStore();
 
-const selectedKeys = ref([rou.currentRoute.value.path]);
+// 选中的菜单
+const selectedKeys = ref([]);
+watch(() => route.path, (val) => {
+  selectedKeys.value.push(val);
+});
 // 点击菜单跳转
 const menuSelect = (path) => {
   rou.push(path);

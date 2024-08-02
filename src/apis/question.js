@@ -19,3 +19,21 @@ export const addQuestionApi = (data) => {
         data: data
     })
 }
+
+
+// 获取题目详情
+export const getQuestionDetailApi = (id) => {
+    return Request({
+        url: `/question/detail/${id}`,
+        method: 'get',
+    })
+}
+
+
+// 删除题目
+export const deleteQuestionApi = (id) => {
+    return Request({
+        url: `/question/delete/${id}`,
+        method: 'delete',
+    })
+}
