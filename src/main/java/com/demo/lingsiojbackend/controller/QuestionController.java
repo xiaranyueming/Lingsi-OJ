@@ -2,10 +2,7 @@ package com.demo.lingsiojbackend.controller;
 
 import com.demo.lingsiojbackend.annotation.Auth;
 import com.demo.lingsiojbackend.constant.ErrorCodeEnum;
-import com.demo.lingsiojbackend.entity.queation.QuestionPage;
-import com.demo.lingsiojbackend.entity.queation.AddQuestionParam;
-import com.demo.lingsiojbackend.entity.queation.QuestionDetail;
-import com.demo.lingsiojbackend.entity.queation.UpdateQuestionParam;
+import com.demo.lingsiojbackend.entity.queation.*;
 import com.demo.lingsiojbackend.entity.vo.QuestionVO;
 import com.demo.lingsiojbackend.service.QuestionService;
 import com.demo.lingsiojbackend.utils.Result;
@@ -48,13 +45,14 @@ public class QuestionController {
      * @return 题目详情
      */
     @GetMapping("/detail/{id}")
-    @Operation(summary = "获取题目详情")
-    public Result getQuestionDetail(@PathVariable("id") Integer id) {
+    @Operation(summary = "获取题目详情to管理员")
+    @Auth
+    public Result getQuestionDetailToAdmin(@PathVariable("id") Integer id) {
         if (id == null) {
             return Result.fail(ErrorCodeEnum.PARAM_ERROR);
         }
-        QuestionDetail questionDetail = questionService.getQuestionDetail(id);
-        return Result.success(questionDetail);
+        AdminQuestionDetail adminQuestionDetail = questionService.getQuestionDetailToAdmin(id);
+        return Result.success(adminQuestionDetail);
     }
 
 
@@ -109,5 +107,22 @@ public class QuestionController {
         }
         questionService.deleteQuestion(id);
         return Result.success();
+    }
+
+
+
+    /**
+     * 获取题目详情
+     * @param id 题目id
+     * @return 题目详情
+     */
+    @GetMapping("/detail/user/{id}")
+    @Operation(summary = "获取题目详情to用户")
+    public Result getQuestionDetailToUser(@PathVariable("id") Integer id) {
+        if (id == null) {
+            return Result.fail(ErrorCodeEnum.PARAM_ERROR);
+        }
+        QuestionDetail questionDetail = questionService.getQuestionDetailToUser(id);
+        return Result.success(questionDetail);
     }
 }

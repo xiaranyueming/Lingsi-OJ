@@ -4,6 +4,7 @@ import com.demo.lingsiojbackend.entity.domain.QuestionSubmit;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.demo.lingsiojbackend.entity.queation.QuestionPage;
 import com.demo.lingsiojbackend.entity.questionsubmit.AddQuestionSubmitParam;
+import com.demo.lingsiojbackend.entity.questionsubmit.QuestionSubmitDetail;
 import com.demo.lingsiojbackend.entity.questionsubmit.QuestionSubmitPage;
 import com.demo.lingsiojbackend.entity.vo.QuestionSubmitVO;
 
@@ -31,4 +32,19 @@ public interface QuestionSubmitService extends IService<QuestionSubmit> {
      * @param addQuestionSubmitParam 提交题目参数
      */
     void addQuestionSubmit(AddQuestionSubmitParam addQuestionSubmitParam);
+
+
+    /**
+     * 删除题目提交
+     * @param id 题目提交id
+     */
+    void deleteQuestionSubmit(Integer id);
+
+
+    /**
+     * 获取题目提交详情
+     * @param id 题目提交id
+     * @return 题目提交详情
+     */
+    QuestionSubmitDetail getQuestionSubmitDetail(Integer id);
 }

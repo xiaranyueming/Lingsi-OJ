@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.demo.lingsiojbackend.constant.ErrorCodeEnum;
 import com.demo.lingsiojbackend.entity.domain.Question;
-import com.demo.lingsiojbackend.entity.queation.QuestionPage;
-import com.demo.lingsiojbackend.entity.queation.AddQuestionParam;
-import com.demo.lingsiojbackend.entity.queation.QuestionDetail;
-import com.demo.lingsiojbackend.entity.queation.UpdateQuestionParam;
+import com.demo.lingsiojbackend.entity.queation.*;
 import com.demo.lingsiojbackend.entity.vo.QuestionVO;
 import com.demo.lingsiojbackend.exception.CustomException;
 import com.demo.lingsiojbackend.service.QuestionService;
@@ -61,7 +58,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
      * @return 题目详情
      */
     @Override
-    public QuestionDetail getQuestionDetail(Integer id) {
+    public AdminQuestionDetail getQuestionDetailToAdmin(Integer id) {
         if (id == null) {
             throw new CustomException(ErrorCodeEnum.PARAM_ERROR.getCode(), ErrorCodeEnum.PARAM_ERROR.getMessage());
         }
@@ -71,7 +68,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
         if (question == null) {
             throw new CustomException(ErrorCodeEnum.INFO_NOT_EXIST.getCode(), ErrorCodeEnum.INFO_NOT_EXIST.getMessage());
         }
-        return QuestionUtil.question2QuestionDetail(question);
+        return QuestionUtil.question2AdminQuestionDetail(question);
     }
 
 
@@ -129,6 +126,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
      * @param id 题目id
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteQuestion(Integer id) {
         if (id == null) {
             throw new CustomException(ErrorCodeEnum.PARAM_ERROR.getCode(), ErrorCodeEnum.PARAM_ERROR.getMessage());
@@ -144,6 +142,27 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
         } catch (Exception e) {
             throw new CustomException(ErrorCodeEnum.SYSTEM_ERROR.getCode(), ErrorCodeEnum.SYSTEM_ERROR.getMessage());
         }
+    }
+
+
+
+    /**
+     * 获取题目详情
+     * @param id 题目id
+     * @return 题目详情
+     */
+    @Override
+    public QuestionDetail getQuestionDetailToUser(Integer id) {
+        if (id == null) {
+            throw new CustomException(ErrorCodeEnum.PARAM_ERROR.getCode(), ErrorCodeEnum.PARAM_ERROR.getMessage());
+        }
+        Question question = this.lambdaQuery()
+                .eq(Question::getId, id)
+                .one();
+        if (question == null) {
+            throw new CustomException(ErrorCodeEnum.INFO_NOT_EXIST.getCode(), ErrorCodeEnum.INFO_NOT_EXIST.getMessage());
+        }
+        return QuestionUtil.question2QuestionDetail(question);
     }
 
 

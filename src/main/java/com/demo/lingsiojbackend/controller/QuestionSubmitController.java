@@ -1,8 +1,10 @@
 package com.demo.lingsiojbackend.controller;
 
+import com.demo.lingsiojbackend.annotation.Auth;
 import com.demo.lingsiojbackend.constant.ErrorCodeEnum;
-import com.demo.lingsiojbackend.entity.queation.QuestionPage;
+import com.demo.lingsiojbackend.constant.LanguageEnum;
 import com.demo.lingsiojbackend.entity.questionsubmit.AddQuestionSubmitParam;
+import com.demo.lingsiojbackend.entity.questionsubmit.QuestionSubmitDetail;
 import com.demo.lingsiojbackend.entity.questionsubmit.QuestionSubmitPage;
 import com.demo.lingsiojbackend.entity.vo.QuestionSubmitVO;
 import com.demo.lingsiojbackend.service.QuestionSubmitService;
@@ -11,10 +13,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -59,4 +58,49 @@ public class QuestionSubmitController {
         questionSubmitService.addQuestionSubmit(addQuestionSubmitParam);
         return Result.success();
     }
+
+
+    /**
+     * 删除题目提交
+     * @param id 题目提交id
+     * @return 删除结果
+     */
+    @DeleteMapping("/question/{id}")
+    @Operation(summary = "删除题目提交")
+    @Auth
+    public Result deleteQuestionSubmit(@PathVariable("id") Integer id) {
+        if (id == null) {
+            return Result.fail(ErrorCodeEnum.PARAM_ERROR);
+        }
+        questionSubmitService.deleteQuestionSubmit(id);
+        return Result.success();
+    }
+
+
+    /**
+     * 获取语言列表
+     * @return 语言列表
+     */
+    @GetMapping("/language")
+    @Operation(summary = "获取语言列表")
+    public Result getLanguageList() {
+        return Result.success(LanguageEnum.getValues());
+    }
+
+
+    /**
+     * 获取题目提交详情
+     * @param id 题目提交id
+     * @return 题目提交详情
+     */
+    @GetMapping("/question/{id}")
+    @Operation(summary = "获取题目提交详情")
+    public Result getQuestionSubmitDetail(@PathVariable("id") Integer id) {
+        if (id == null) {
+            return Result.fail(ErrorCodeEnum.PARAM_ERROR);
+        }
+        QuestionSubmitDetail questionSubmitDetail = questionSubmitService.getQuestionSubmitDetail(id);
+        return Result.success(questionSubmitDetail);
+    }
+
 }

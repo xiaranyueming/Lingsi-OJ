@@ -2,10 +2,7 @@ package com.demo.lingsiojbackend.service;
 
 import com.demo.lingsiojbackend.entity.domain.Question;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.demo.lingsiojbackend.entity.queation.QuestionPage;
-import com.demo.lingsiojbackend.entity.queation.AddQuestionParam;
-import com.demo.lingsiojbackend.entity.queation.QuestionDetail;
-import com.demo.lingsiojbackend.entity.queation.UpdateQuestionParam;
+import com.demo.lingsiojbackend.entity.queation.*;
 import com.demo.lingsiojbackend.entity.vo.QuestionVO;
 
 import java.util.List;
@@ -30,7 +27,7 @@ public interface QuestionService extends IService<Question> {
      * @param id 题目id
      * @return 题目详情
      */
-    QuestionDetail getQuestionDetail(Integer id);
+    AdminQuestionDetail getQuestionDetailToAdmin(Integer id);
 
 
     /**
@@ -53,4 +50,13 @@ public interface QuestionService extends IService<Question> {
      * @param id 题目id
      */
     void deleteQuestion(Integer id);
+
+
+
+    /**
+     * 获取题目详情
+     * @param id 题目id
+     * @return 题目详情
+     */
+    QuestionDetail getQuestionDetailToUser(Integer id);
 }

@@ -3,10 +3,7 @@ package com.demo.lingsiojbackend.utils;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
 import com.demo.lingsiojbackend.entity.domain.Question;
-import com.demo.lingsiojbackend.entity.queation.AddQuestionParam;
-import com.demo.lingsiojbackend.entity.queation.JudgeConfig;
-import com.demo.lingsiojbackend.entity.queation.QuestionDetail;
-import com.demo.lingsiojbackend.entity.queation.UpdateQuestionParam;
+import com.demo.lingsiojbackend.entity.queation.*;
 import com.demo.lingsiojbackend.entity.vo.QuestionVO;
 
 import java.util.List;
@@ -56,6 +53,33 @@ public class QuestionUtil {
         questionDetail.setUserId(question.getUserId());
 
         return questionDetail;
+    }
+
+
+    /**
+     * 将题目实体转换为后台题目详情实体
+     * @param question  题目实体
+     * @return  AdminQuestionDetail
+     */
+    public static AdminQuestionDetail question2AdminQuestionDetail(Question question) {
+        AdminQuestionDetail adminQuestionDetail = new AdminQuestionDetail();
+        adminQuestionDetail.setId(question.getId());
+        adminQuestionDetail.setTitle(question.getTitle());
+        adminQuestionDetail.setContent(question.getContent());
+        // 将 tags 字符串转换为 List
+        JSONArray jsonArray = JSONUtil.parseArray(question.getTags());
+        List<String> tags = jsonArray.toList(String.class);
+        adminQuestionDetail.setTags(tags);
+        // 将 judgeCase 字符串转换为 List
+        JSONArray judgeCaseArray = JSONUtil.parseArray(question.getJudgeCase());
+        List<JudgeCase> judgeCaseList = judgeCaseArray.toList(JudgeCase.class);
+        adminQuestionDetail.setJudgeCase(judgeCaseList);
+        // 将 judgeConfig 字符串转换为 JudgeConfig 对象
+        JudgeConfig judgeConfig = JSONUtil.toBean(question.getJudgeConfig(), JudgeConfig.class);
+        adminQuestionDetail.setJudgeConfig(judgeConfig);
+        adminQuestionDetail.setUserId(question.getUserId());
+
+        return adminQuestionDetail;
     }
 
 

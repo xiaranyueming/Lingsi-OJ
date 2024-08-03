@@ -10,6 +10,8 @@ import com.demo.lingsiojbackend.entity.domain.Question;
 import com.demo.lingsiojbackend.entity.domain.QuestionSubmit;
 import com.demo.lingsiojbackend.entity.domain.User;
 import com.demo.lingsiojbackend.entity.questionsubmit.AddQuestionSubmitParam;
+import com.demo.lingsiojbackend.entity.questionsubmit.JudgeInfo;
+import com.demo.lingsiojbackend.entity.questionsubmit.QuestionSubmitDetail;
 import com.demo.lingsiojbackend.entity.questionsubmit.QuestionSubmitPage;
 import com.demo.lingsiojbackend.entity.vo.QuestionSubmitVO;
 import com.demo.lingsiojbackend.entity.vo.QuestionVO;
@@ -19,6 +21,7 @@ import com.demo.lingsiojbackend.mapper.QuestionMapper;
 import com.demo.lingsiojbackend.mapper.UserMapper;
 import com.demo.lingsiojbackend.service.QuestionSubmitService;
 import com.demo.lingsiojbackend.mapper.QuestionSubmitMapper;
+import com.demo.lingsiojbackend.utils.QuestionSubmitUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -50,11 +53,14 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
      * @return 题目提交VO列表
      */
     public List<QuestionSubmitVO> getQuestionSubmitList(List<QuestionSubmit> questionSubmitList) {
+        if (questionSubmitList == null || questionSubmitList.isEmpty()) {
+            return new ArrayList<>();
+        }
         // 将题目提交列表中的用户id和questionId提取出来
         List<Integer> userIds = new ArrayList<>();
         List<Integer> questionIds = new ArrayList<>();
         questionSubmitList.forEach(questionSubmit -> {
-            userIds.add(questionSubmit.getId());
+            userIds.add(questionSubmit.getUserId());
             questionIds.add(questionSubmit.getQuestionId());
         });
         // 批量查询用户信息，将其转换为map，key为id，value为UserVO
@@ -74,8 +80,10 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
 
         return questionSubmitList.stream().map(questionSubmit -> {
             QuestionSubmitVO questionSubmitVO = BeanUtil.copyProperties(questionSubmit, QuestionSubmitVO.class);
+            // 将 judgeInfo json转换为 JudgeInfo 对象
+            questionSubmitVO.setJudgeInfo(JSONUtil.toBean(questionSubmit.getJudgeInfo(), JudgeInfo.class));
             // 从map中获取用户信息
-            UserVO userVO = userVOMap.get(questionSubmit.getId());
+            UserVO userVO = userVOMap.get(questionSubmit.getUserId());
             if (userVO != null) {
                 questionSubmitVO.setUserVO(userVO);
             }
@@ -133,9 +141,59 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         QuestionSubmit questionSubmit = BeanUtil.copyProperties(addQuestionSubmitParam, QuestionSubmit.class);
         try {
             this.save(questionSubmit);
+            // 修改题目的提交次数
+            Question question = questionMapper.selectById(addQuestionSubmitParam.getQuestionId());
+            question.setSubmitNum(question.getSubmitNum() + 1);
+            questionMapper.updateById(question);
         } catch (Exception e) {
             throw new CustomException(ErrorCodeEnum.SYSTEM_ERROR.getCode(), ErrorCodeEnum.SYSTEM_ERROR.getMessage());
         }
+    }
+
+
+
+    /**
+     * 删除题目提交
+     * @param id 题目提交id
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteQuestionSubmit(Integer id) {
+        if (id == null) {
+            throw new CustomException(ErrorCodeEnum.PARAM_ERROR.getCode(), ErrorCodeEnum.PARAM_ERROR.getMessage());
+        }
+        try {
+            this.removeById(id);
+        } catch (Exception e) {
+            throw new CustomException(ErrorCodeEnum.SYSTEM_ERROR.getCode(), ErrorCodeEnum.SYSTEM_ERROR.getMessage());
+        }
+    }
+
+
+
+    /**
+     * 获取题目提交详情
+     * @param id 题目提交id
+     * @return 题目提交详情
+     */
+    @Override
+    public QuestionSubmitDetail getQuestionSubmitDetail(Integer id) {
+        if (id == null) {
+            throw new CustomException(ErrorCodeEnum.PARAM_ERROR.getCode(), ErrorCodeEnum.PARAM_ERROR.getMessage());
+        }
+        QuestionSubmit questionSubmit = this.getById(id);
+        if (questionSubmit == null) {
+            throw new CustomException(ErrorCodeEnum.INFO_NOT_EXIST.getCode(), ErrorCodeEnum.INFO_NOT_EXIST.getMessage());
+        }
+        User user = userMapper.selectById(questionSubmit.getUserId());
+        if (user == null) {
+            throw new CustomException(ErrorCodeEnum.INFO_NOT_EXIST.getCode(), ErrorCodeEnum.INFO_NOT_EXIST.getMessage());
+        }
+        Question question = questionMapper.selectById(questionSubmit.getQuestionId());
+        if (question == null) {
+            throw new CustomException(ErrorCodeEnum.INFO_NOT_EXIST.getCode(), ErrorCodeEnum.INFO_NOT_EXIST.getMessage());
+        }
+        return QuestionSubmitUtil.questionSubmit2QuestionSubmitDetail(questionSubmit, user, question);
     }
 }
 

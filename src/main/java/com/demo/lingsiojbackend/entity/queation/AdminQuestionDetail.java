@@ -1,12 +1,17 @@
 package com.demo.lingsiojbackend.entity.queation;
 
+
 import lombok.Data;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Data
-public class AddQuestionParam implements Serializable {
+public class AdminQuestionDetail {
+    /**
+     * 索引
+     */
+    private Integer id;
+
     /**
      * 标题
      */
