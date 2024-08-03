@@ -37,3 +37,12 @@ export const deleteQuestionApi = (id) => {
         method: 'delete',
     })
 }
+
+
+// 获取题目详情to用户
+export const getQuestionDetailToUserApi = (id) => {
+    return Request({
+        url: `/question/detail/user/${id}`,
+        method: 'get',
+    })
+}

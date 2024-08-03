@@ -1,6 +1,6 @@
 <script setup>
 import * as monaco from 'monaco-editor';
-import {onMounted, ref, watch} from "vue";
+import {onBeforeMount, onMounted, ref, watch} from "vue";
 import {getLanguageListApi} from "@/apis/questionSubmit.js";
 
 self.MonacoEnvironment = {
@@ -33,9 +33,11 @@ self.MonacoEnvironment = {
 };
 
 const props = defineProps({
-  value: String
+  value: String,
+  onlyRead: Boolean,
+  language: String,
 })
-const emit = defineEmits(['handleChange'])
+const emit = defineEmits(['handleChange', 'getLanguage'])
 
 // 获取语言列表
 const languageList = ref([])
@@ -60,7 +62,7 @@ const themeHandleChange = (value) => {
 }
 
 // 代码编辑器配置
-const language = ref('java')
+const language = ref(props.language ? props.language : 'java')
 const options = ref({
   value: props.value,
   language: language.value,
@@ -68,14 +70,18 @@ const options = ref({
   selectOnLineNumbers: true,
   minimap: {
     enabled: true
-  }
+  },
+  readOnly: props.onlyRead
 })
 // 监听配置变化，更新编辑器
 watch(options, (value) => {
   monaco.editor.getModels()[0].setValue(value.value)
   monaco.editor.setModelLanguage(monaco.editor.getModels()[0], value.language)
+  emit('getLanguage', value.language)
   monaco.editor.setTheme(value.theme)
 }, {deep: true})
+
+
 
 onMounted(() => {
   getLanguageList()
@@ -85,6 +91,7 @@ onMounted(() => {
   monaco.editor.getModels()[0].onDidChangeContent(() => {
     emit('handleChange', monaco.editor.getModels()[0].getValue())
   })
+  emit('getLanguage', language.value)
 })
 </script>
 
@@ -94,7 +101,7 @@ onMounted(() => {
         ref="select"
         v-model:value="language"
         style="width: 120px;margin-right: 50px; margin-left: 200px"
-        @change="languageHandleChange"
+        @change="languageHandleChange" :disabled="props.onlyRead"
     >
       <a-select-option v-for="item in languageList" :value="item">{{item}}</a-select-option>
     </a-select>
@@ -102,7 +109,7 @@ onMounted(() => {
         ref="select"
         v-model:value="theme"
         style="width: 120px"
-        @change="themeHandleChange"
+        @change="themeHandleChange" :disabled="props.onlyRead"
     >
       <a-select-option v-for="item in themeList" :value="item">{{item}}</a-select-option>
     </a-select>

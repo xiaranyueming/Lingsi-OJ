@@ -18,3 +18,30 @@ export const getQuestionSubmitListApi = (data) => {
         data: data
     })
 }
+
+
+// 提交题目
+export const questionSubmitApi = (data) => {
+    return Request({
+        url: '/submit/question',
+        method: 'post',
+        data: data
+    })
+}
+
+
+// 获取题目提交详情
+export const getQuestionSubmitDetailApi = (id) => {
+    return Request({
+        url: `/submit/question/${id}`,
+        method: 'get',
+    })
+}
+
+
+export const getQuestionSubmitApi = (id) => {
+    return Request({
+        url: `/submit/question/vo/${id}`,
+        method: 'get',
+    })
+}

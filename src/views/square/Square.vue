@@ -1,6 +1,7 @@
 <script setup>
 import {onMounted, ref} from "vue";
 import {getLanguageListApi, getQuestionSubmitListApi} from "@/apis/questionSubmit.js";
+import router from "@/router/index.js";
 
 const page = ref({
   questionIndex: null,
@@ -107,6 +108,10 @@ const getQuestionSubmitList = async () => {
 }
 
 
+const toQuestionSubmitDetail = (id) => {
+  router.push('/answerQuestion/' + id + '?type=submit')
+}
+
 
 onMounted(() => {
   getLanguageList()
@@ -138,7 +143,7 @@ onMounted(() => {
           </a-tag>
         </template>
         <template v-else-if="column.key === 'action'">
-          <a-button ghost type="primary">查看</a-button>
+          <a-button ghost type="primary" @click="toQuestionSubmitDetail(record.id)">查看</a-button>
         </template>
         <template v-else-if="column.key === 'info'">
           <img :src="record.userVO.avatar" alt="头像" style="width: 35px; margin-right: 10px; border-radius: 8px">

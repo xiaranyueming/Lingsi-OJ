@@ -76,8 +76,8 @@ const search = async () => {
   await getQuestionList()
 }
 
-const toAnswerQuestion = () => {
-  router.push('/answerQuestion')
+const toAnswerQuestion = (id) => {
+  router.push('/answerQuestion/' + id + '?type=answer')
 }
 
 onMounted(() => {
@@ -100,7 +100,7 @@ onMounted(() => {
         </a-tag>
       </template>
       <template v-else-if="column.key === 'action'">
-        <a-button ghost type="primary" @click="toAnswerQuestion">答题</a-button>
+        <a-button ghost type="primary" @click="toAnswerQuestion(record.id)">答题</a-button>
       </template>
     </template>
   </a-table>

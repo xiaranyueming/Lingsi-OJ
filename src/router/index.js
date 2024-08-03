@@ -39,7 +39,7 @@ const router = createRouter({
         }
     },
     {
-      path: '/answerQuestion',
+      path: '/answerQuestion/:id',
       component: AnswerQuestion,
       meta: {
         hidden: true,
