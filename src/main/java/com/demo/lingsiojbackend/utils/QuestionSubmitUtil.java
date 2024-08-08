@@ -24,7 +24,7 @@ public class QuestionSubmitUtil {
         QuestionSubmitDetail questionSubmitDetail = BeanUtil.copyProperties(questionSubmit, QuestionSubmitDetail.class);
         // 将 judgeInfo 字符串转换为 JudgeInfo 对象
         JudgeInfo judgeInfo = JSONUtil.toBean(questionSubmit.getJudgeInfo(), JudgeInfo.class);
-        questionSubmitDetail.setJudgeInfo(judgeInfo);
+        questionSubmitDetail.setInfo(judgeInfo);
         // 设置用户信息
         questionSubmitDetail.setUserVO(BeanUtil.copyProperties(user, UserVO.class));
         // 设置题目信息

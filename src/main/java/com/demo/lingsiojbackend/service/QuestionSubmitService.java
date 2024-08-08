@@ -26,12 +26,11 @@ public interface QuestionSubmitService extends IService<QuestionSubmit> {
     List<QuestionSubmitVO> getQuestionSubmitListByPage(QuestionSubmitPage questionSubmitPage);
 
 
-
     /**
      * 提交题目
      * @param addQuestionSubmitParam 提交题目参数
      */
-    void addQuestionSubmit(AddQuestionSubmitParam addQuestionSubmitParam);
+    Integer addQuestionSubmit(AddQuestionSubmitParam addQuestionSubmitParam);
 
 
     /**

@@ -81,7 +81,8 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         return questionSubmitList.stream().map(questionSubmit -> {
             QuestionSubmitVO questionSubmitVO = BeanUtil.copyProperties(questionSubmit, QuestionSubmitVO.class);
             // 将 judgeInfo json转换为 JudgeInfo 对象
-            questionSubmitVO.setJudgeInfo(JSONUtil.toBean(questionSubmit.getJudgeInfo(), JudgeInfo.class));
+            JudgeInfo judgeInfo = JSONUtil.toBean(questionSubmit.getJudgeInfo(), JudgeInfo.class);
+            questionSubmitVO.setInfo(judgeInfo);
             // 从map中获取用户信息
             UserVO userVO = userVOMap.get(questionSubmit.getUserId());
             if (userVO != null) {
@@ -127,13 +128,13 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void addQuestionSubmit(AddQuestionSubmitParam addQuestionSubmitParam) {
+    public Integer addQuestionSubmit(AddQuestionSubmitParam addQuestionSubmitParam) {
         if (addQuestionSubmitParam == null || addQuestionSubmitParam.getQuestionId() == null
                 || addQuestionSubmitParam.getUserId() == null || StringUtils.isBlank(addQuestionSubmitParam.getCode())
                 || StringUtils.isBlank(addQuestionSubmitParam.getLanguage())) {
             throw new CustomException(ErrorCodeEnum.PARAM_ERROR.getCode(), ErrorCodeEnum.PARAM_ERROR.getMessage());
         }
-
+        // 判断语言是否合法
         LanguageEnum languageEnum = LanguageEnum.getEnumByValue(addQuestionSubmitParam.getLanguage());
         if (languageEnum == null) {
             throw new CustomException(ErrorCodeEnum.PARAM_ERROR.getCode(), ErrorCodeEnum.PARAM_ERROR.getMessage());
@@ -148,6 +149,7 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         } catch (Exception e) {
             throw new CustomException(ErrorCodeEnum.SYSTEM_ERROR.getCode(), ErrorCodeEnum.SYSTEM_ERROR.getMessage());
         }
+        return questionSubmit.getId();
     }
 
 

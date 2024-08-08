@@ -17,6 +17,8 @@ spring:
   mvc:
     static-path-pattern: /**
 
+judge:
+  type: example
 
 
 

@@ -7,11 +7,13 @@ import com.demo.lingsiojbackend.entity.questionsubmit.AddQuestionSubmitParam;
 import com.demo.lingsiojbackend.entity.questionsubmit.QuestionSubmitDetail;
 import com.demo.lingsiojbackend.entity.questionsubmit.QuestionSubmitPage;
 import com.demo.lingsiojbackend.entity.vo.QuestionSubmitVO;
+import com.demo.lingsiojbackend.logic.JudgeLogic;
 import com.demo.lingsiojbackend.service.QuestionSubmitService;
 import com.demo.lingsiojbackend.utils.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,9 +23,12 @@ import java.util.List;
 @RequestMapping("/submit")
 @RequiredArgsConstructor
 @Tag(name = "题目提交管理")
+@Slf4j
 public class QuestionSubmitController {
 
     private final QuestionSubmitService questionSubmitService;
+
+    private final JudgeLogic judgeLogic;
 
 
     /**
@@ -55,7 +60,7 @@ public class QuestionSubmitController {
             || StringUtils.isBlank(addQuestionSubmitParam.getCode()) || StringUtils.isBlank(addQuestionSubmitParam.getLanguage())) {
             return Result.fail(ErrorCodeEnum.PARAM_ERROR);
         }
-        questionSubmitService.addQuestionSubmit(addQuestionSubmitParam);
+        judgeLogic.addQuestionSubmit(addQuestionSubmitParam);
         return Result.success();
     }
 

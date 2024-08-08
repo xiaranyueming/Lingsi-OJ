@@ -38,5 +38,5 @@ public class QuestionSubmitVO {
     /**
      * 判题信息
      */
-    private JudgeInfo judgeInfo;
+    private JudgeInfo info;
 }
