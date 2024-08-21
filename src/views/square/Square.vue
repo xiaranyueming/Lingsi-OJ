@@ -3,13 +3,6 @@ import {onMounted, ref} from "vue";
 import {getLanguageListApi, getQuestionSubmitListApi} from "@/apis/questionSubmit.js";
 import router from "@/router/index.js";
 
-const page = ref({
-  questionIndex: null,
-  pageNum: 1,
-  pageSize: 10,
-  language: 'java'
-})
-
 // 获取语言列表
 const languageList = ref([])
 const getLanguageList = async () => {
@@ -100,11 +93,30 @@ const columns = [
 ];
 // 获取题目提交数据
 const data = ref([])
+const pagination = ref({
+  current: 1,
+  pageSize: 10,
+  total: 0
+})
+const page = ref({
+  questionIndex: null,
+  pageNum: pagination.value.current,
+  pageSize: 10,
+  language: 'java'
+})
 const getQuestionSubmitList = async () => {
   const res = await getQuestionSubmitListApi(page.value)
   if (res.code === 200) {
-    data.value = res.data
+    data.value = res.data.list
+    pagination.value.total = res.data.total
   }
+}
+
+// 分页
+const handleChange = async (pag, filters, sorter) => {
+  page.value.pageNum = pag.current
+  pagination.value = pag
+  await getQuestionSubmitList()
 }
 
 
@@ -135,7 +147,7 @@ onMounted(() => {
       <a-button ghost class="reset-btn" type="primary" @click="reset">重置</a-button>
     </div>
 
-    <a-table :columns="columns" :data-source="data">
+    <a-table :columns="columns" :data-source="data" :pagination="pagination" @change="handleChange">
       <template #bodyCell="{ column, record }">
         <template v-if="column.key === 'tags'">
           <a-tag color="orange" v-for="item in record.questionVO?.tags">

@@ -15,6 +15,7 @@ const value = ref('')
 const handleChange = (v) => {
   value.value = v
   questionSubmit.value.code = v
+  console.log(questionSubmit.value.code)
 }
 
 const activeKey = ref('question')
@@ -48,7 +49,6 @@ const submit = async () => {
       message: '提交成功',
       description: '请等待判题结果'
     })
-    questionSubmit.value.code = ''
   } else {
     notification.error({
       message: '提交失败',
@@ -81,6 +81,7 @@ onMounted(() => {
     getQuestionSubmitDetail()
   }
 })
+
 </script>
 
 <template>
@@ -117,9 +118,9 @@ onMounted(() => {
                   <a-tag v-if="questionDetail.status === 0" color="orange">未提交</a-tag>
                 </div>
                 <a-descriptions title="判题信息" :column="{xs: 1, sm: 2, md: 3}">
-                  <a-descriptions-item label="时间消耗">{{questionDetail.judgeInfo?.time}}</a-descriptions-item>
-                  <a-descriptions-item label="内存消耗">{{questionDetail.judgeInfo?.memory}}</a-descriptions-item>
-                  <a-descriptions-item label="信息">{{questionDetail.judgeInfo?.message}}</a-descriptions-item>
+                  <a-descriptions-item label="时间消耗">{{questionDetail.info?.time}}</a-descriptions-item>
+                  <a-descriptions-item label="内存消耗">{{questionDetail.info?.memory}}</a-descriptions-item>
+                  <a-descriptions-item label="信息">{{questionDetail.info?.message}}</a-descriptions-item>
                 </a-descriptions>
                 <div v-if="questionDetail.userVO" style="margin-top: 45px">
                   <img :src="questionDetail.userVO?.avatar" alt="头像" style="width: 60px;border-radius: 15%" >

@@ -48,8 +48,14 @@ const columns = [
 ];
 const data = ref([])
 // 分页信息
-const page = ref({
+const pagination = ref({
   pageNum: 1,
+  pageSize: 10,
+  total: 0
+})
+// 分页信息
+const page = ref({
+  pageNum: pagination.value.pageNum,
   pageSize: 10,
   keyword: '',
   questionIndex: null
@@ -58,9 +64,17 @@ const page = ref({
 const getQuestionList = async () => {
   const res = await getQuestionListApi(page.value)
   if (res.code === 200) {
-    data.value = res.data
+    data.value = res.data.list
+    pagination.value.total = res.data.total
   }
 }
+// 分页
+const handleChange = async (pag, filters, sorter) => {
+  page.value.pageNum = pag.current
+  pagination.value = pag
+  await getQuestionList()
+}
+
 // 重置
 const reset = async () => {
   page.value = {
@@ -92,7 +106,7 @@ onMounted(() => {
     <a-button ghost class="search-btn" type="primary" @click="search">搜索</a-button>
     <a-button ghost class="reset-btn" type="primary" @click="reset">重置</a-button>
   </div>
-  <a-table :columns="columns" :data-source="data">
+  <a-table :columns="columns" :data-source="data" :pagination="pagination" @change="handleChange">
     <template #bodyCell="{ column, record }">
       <template v-if="column.key === 'tags'">
         <a-tag color="orange" v-for="item in record.tags">
