@@ -5,14 +5,13 @@ import com.demo.lingsiojbackend.constant.ErrorCodeEnum;
 import com.demo.lingsiojbackend.entity.queation.*;
 import com.demo.lingsiojbackend.entity.vo.QuestionVO;
 import com.demo.lingsiojbackend.service.QuestionService;
+import com.demo.lingsiojbackend.utils.PageUtil;
 import com.demo.lingsiojbackend.utils.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/question")
@@ -34,8 +33,8 @@ public class QuestionController {
         if (questionPage.getPageSize() == null || questionPage.getPageNum() == null) {
             return Result.fail(ErrorCodeEnum.PARAM_ERROR);
         }
-        List<QuestionVO> list = questionService.getQuestionList(questionPage);
-        return Result.success(list);
+        PageUtil<QuestionVO> pageUtil = questionService.getQuestionList(questionPage);
+        return Result.success(pageUtil);
     }
 
 

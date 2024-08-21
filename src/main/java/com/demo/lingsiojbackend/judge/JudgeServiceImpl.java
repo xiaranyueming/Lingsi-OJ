@@ -35,6 +35,8 @@ public class JudgeServiceImpl implements JudgeService {
 
     private final QuestionSubmitService questionSubmitService;
 
+    private final CodeSandBoxFactory codeSandBoxFactory;
+
     @Value("${judge.type}")
     private String type;
 
@@ -73,7 +75,7 @@ public class JudgeServiceImpl implements JudgeService {
             throw new CustomException(ErrorCodeEnum.SYSTEM_ERROR.getCode(), "更新题目提交状态失败");
         }
         // 获取代码沙箱
-        CodeSandBox codeSandBox = CodeSandBoxFactory.newInstance(type);
+        CodeSandBox codeSandBox = codeSandBoxFactory.newInstance(type);
         // 获取输入用例
         List<JudgeCase> judgeCaseList = JSONUtil.toList(question.getJudgeCase(), JudgeCase.class);
         List<String> inputList = judgeCaseList.stream().map(JudgeCase::getInput).toList();

@@ -7,6 +7,7 @@ import com.demo.lingsiojbackend.entity.questionsubmit.AddQuestionSubmitParam;
 import com.demo.lingsiojbackend.entity.questionsubmit.QuestionSubmitDetail;
 import com.demo.lingsiojbackend.entity.questionsubmit.QuestionSubmitPage;
 import com.demo.lingsiojbackend.entity.vo.QuestionSubmitVO;
+import com.demo.lingsiojbackend.utils.PageUtil;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public interface QuestionSubmitService extends IService<QuestionSubmit> {
      * @param questionSubmitPage  分页参数
      * @return 题目提交列表
      */
-    List<QuestionSubmitVO> getQuestionSubmitListByPage(QuestionSubmitPage questionSubmitPage);
+    PageUtil<QuestionSubmitVO> getQuestionSubmitListByPage(QuestionSubmitPage questionSubmitPage);
 
 
     /**

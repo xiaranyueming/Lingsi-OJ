@@ -9,6 +9,7 @@ import com.demo.lingsiojbackend.entity.vo.QuestionVO;
 import com.demo.lingsiojbackend.exception.CustomException;
 import com.demo.lingsiojbackend.service.QuestionService;
 import com.demo.lingsiojbackend.mapper.QuestionMapper;
+import com.demo.lingsiojbackend.utils.PageUtil;
 import com.demo.lingsiojbackend.utils.QuestionUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
      * @return 题目列表
      */
     @Override
-    public List<QuestionVO> getQuestionList(QuestionPage questionPage) {
+    public PageUtil<QuestionVO> getQuestionList(QuestionPage questionPage) {
         if (questionPage.getPageSize() == null || questionPage.getPageNum() == null) {
             throw new CustomException(ErrorCodeEnum.PARAM_ERROR.getCode(), ErrorCodeEnum.PARAM_ERROR.getMessage());
         }
@@ -48,7 +49,13 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question>
                 .page(page)
                 .getRecords();
 
-        return QuestionUtil.questionList2QueationVOList(questionList);
+        List<QuestionVO> questionVOList = QuestionUtil.questionList2QueationVOList(questionList);
+
+        PageUtil<QuestionVO> pageUtil = new PageUtil<>();
+        pageUtil.setTotal(page.getTotal());
+        pageUtil.setList(questionVOList);
+
+        return pageUtil;
     }
 
 

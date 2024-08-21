@@ -17,6 +17,7 @@ public class JavaJudgeStrategy implements JudgeStrategy {
         judgeInfo.setTime(judgeContext.getJudgeInfo().getTime());
         judgeInfo.setMemory(judgeContext.getJudgeInfo().getMemory());
         JudgeInfoEnum judgeInfoEnum = JudgeInfoEnum.ACCEPTED;
+        judgeInfo.setMessage(judgeInfoEnum.getValue());
         // 判断输入输出是否一一对应
         if (judgeContext.getInputList().size() != judgeContext.getOutputList().size()) {
             judgeInfoEnum = JudgeInfoEnum.WRONG_ANSWER;

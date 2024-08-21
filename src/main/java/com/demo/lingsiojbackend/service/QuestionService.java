@@ -4,6 +4,7 @@ import com.demo.lingsiojbackend.entity.domain.Question;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.demo.lingsiojbackend.entity.queation.*;
 import com.demo.lingsiojbackend.entity.vo.QuestionVO;
+import com.demo.lingsiojbackend.utils.PageUtil;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public interface QuestionService extends IService<Question> {
      * @param questionPage 分页参数
      * @return 题目列表
      */
-    List<QuestionVO> getQuestionList(QuestionPage questionPage);
+    PageUtil<QuestionVO> getQuestionList(QuestionPage questionPage);
 
 
     /**

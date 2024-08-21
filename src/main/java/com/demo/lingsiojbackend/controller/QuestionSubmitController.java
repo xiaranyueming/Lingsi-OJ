@@ -9,6 +9,7 @@ import com.demo.lingsiojbackend.entity.questionsubmit.QuestionSubmitPage;
 import com.demo.lingsiojbackend.entity.vo.QuestionSubmitVO;
 import com.demo.lingsiojbackend.logic.JudgeLogic;
 import com.demo.lingsiojbackend.service.QuestionSubmitService;
+import com.demo.lingsiojbackend.utils.PageUtil;
 import com.demo.lingsiojbackend.utils.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,8 +17,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/submit")
@@ -43,8 +42,8 @@ public class QuestionSubmitController {
         if (questionSubmitPage.getPageSize() == null || questionSubmitPage.getPageNum() <= 0 || questionSubmitPage.getPageSize() <= 0) {
             return Result.fail(ErrorCodeEnum.PARAM_ERROR);
         }
-        List<QuestionSubmitVO> list = questionSubmitService.getQuestionSubmitListByPage(questionSubmitPage);
-        return Result.success(list);
+        PageUtil<QuestionSubmitVO> pageUtil = questionSubmitService.getQuestionSubmitListByPage(questionSubmitPage);
+        return Result.success(pageUtil);
     }
 
 

@@ -21,6 +21,7 @@ import com.demo.lingsiojbackend.mapper.QuestionMapper;
 import com.demo.lingsiojbackend.mapper.UserMapper;
 import com.demo.lingsiojbackend.service.QuestionSubmitService;
 import com.demo.lingsiojbackend.mapper.QuestionSubmitMapper;
+import com.demo.lingsiojbackend.utils.PageUtil;
 import com.demo.lingsiojbackend.utils.QuestionSubmitUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -104,7 +105,7 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
      * @return 题目提交列表
      */
     @Override
-    public List<QuestionSubmitVO> getQuestionSubmitListByPage(QuestionSubmitPage questionSubmitPage) {
+    public PageUtil<QuestionSubmitVO> getQuestionSubmitListByPage(QuestionSubmitPage questionSubmitPage) {
         if (questionSubmitPage == null || questionSubmitPage.getPageNum() <= 0 || questionSubmitPage.getPageSize() <= 0) {
             throw new CustomException(ErrorCodeEnum.PARAM_ERROR.getCode(), ErrorCodeEnum.PARAM_ERROR.getMessage());
         }
@@ -117,7 +118,12 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
                         questionSubmitPage.getLanguage())
                 .page(page)
                 .getRecords();
-        return getQuestionSubmitList(questionSubmitList);
+        List<QuestionSubmitVO> questionSubmitVOList = getQuestionSubmitList(questionSubmitList);
+
+        PageUtil<QuestionSubmitVO> pageUtil = new PageUtil<>();
+        pageUtil.setTotal(page.getTotal());
+        pageUtil.setList(questionSubmitVOList);
+        return pageUtil;
     }
 
 
